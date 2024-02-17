@@ -1,12 +1,13 @@
-FROM ghcr.io/linuxserver/baseimage-rdesktop-web:focal-20210824
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbullseye
 
-ARG OBSIDIAN_VERSION=1.3.5
+ARG OBSIDIAN_VERSION=1.5.3
 ARG ARCH=arm64
 
 # Update and install extra packages.
 RUN echo "**** install packages ****" && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
+        curl libgtk-3-0 libnotify4 libatspi2.0-0 libsecret-1-0 libnss3 \
         git \
         curl \
         libnss3 \
@@ -34,6 +35,9 @@ ENV CUSTOM_PORT="8080" \
 
 # Add local files
 COPY root/ /
+COPY menu-arm64.xml /etc/xdg/openbox/menu.xml
+RUN chmod +x /squashfs-root/obsidian
+RUN chmod +x /squashfs-root/obsidian.png
 
 # Expose ports and volumes
 EXPOSE 8080 27123 27124
